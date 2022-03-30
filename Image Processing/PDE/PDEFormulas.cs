@@ -93,6 +93,11 @@ namespace Image_Processing.PDE
         }
 
 
-        // Add noise to image?
-    }
+
+    // Heat Equation
+
+
+
+    // Add noise to image?
+}
 }

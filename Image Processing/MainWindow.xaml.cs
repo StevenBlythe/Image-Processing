@@ -32,5 +32,10 @@ namespace Image_Processing
                 DragMove();
             }
         }
+
+        private void Button_Click_Exit(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
