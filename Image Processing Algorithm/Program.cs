@@ -1,7 +1,22 @@
 ﻿using Image_Processing_Algorithm;
 
-Console.WriteLine("Hello, World!");
+// Image to modify
+string input = "";
+int menu;
+do
+{
+    try
+    {
+        Console.WriteLine("Select a menu item");
+        input = Console.ReadLine();
+        menu = int.Parse(input);
+    }
+    catch (System.FormatException ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
 
-PDEAlgorithms.SelectImage(0);
 
-PDEAlgorithms.ReadImage()
+} while (input.ToLower() != "quit" && input.ToLower() != "exit" && input.ToLower() != "leave");
+
+
