@@ -55,7 +55,10 @@ namespace Image_Processing.MVM.View
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
+            if (grayImagePre != null)
+            {
+                PDEFormulas.SaveImage(grayImagePreName, grayImagePost);
+            }
         }
 
     }

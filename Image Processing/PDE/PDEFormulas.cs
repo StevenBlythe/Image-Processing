@@ -92,6 +92,14 @@ namespace Image_Processing.PDE
             }
         }
 
+        // Heat Equation
+
+        // Shock Filter
+
+        // Level set equation
+
+        // Modified Level Set
+
 
         // Add noise to image?
     }
