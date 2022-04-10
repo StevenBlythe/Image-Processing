@@ -101,6 +101,11 @@ namespace Image_Processing.PDE
         // Modified Level Set
 
 
-        // Add noise to image?
-    }
+
+    // Heat Equation
+
+
+
+    // Add noise to image?
+}
 }

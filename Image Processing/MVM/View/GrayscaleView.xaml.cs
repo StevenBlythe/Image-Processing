@@ -40,6 +40,7 @@ namespace Image_Processing.MVM.View
                 // Convert image to BitmapImages for <Image/> compatability
                 gray_post.Source = PDEFormulas.BitmapToImageSource(grayImagePost);
 
+                //PDEFormulas.GetBitmapColorMatrix(grayImagePost);
             }
         }
 

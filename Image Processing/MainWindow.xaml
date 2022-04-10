@@ -15,10 +15,11 @@
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
+    
 
-    <Border CornerRadius="20"
+    <Border CornerRadius="20" 
             Background="#292639"
-            MouseDown="Grid_MouseDown">
+            >
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -31,7 +32,9 @@
 
             <StackPanel Grid.Row="0"
                         Orientation="Horizontal"
-                        Margin="20,0,0,0">
+                        Margin="20,0,0,0"
+                        Background="Transparent"
+                        MouseDown="Grid_MouseDown">
 
                 <RadioButton Content="Parameters"
                              Height="25"
@@ -72,9 +75,41 @@
 
             </StackPanel>
 
+            <Button x:Name="select_image" Content="Quit"
+                    FontSize="14"
+                    Grid.Row="0" Grid.Column="0"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,20,0"
+                    Foreground="White" 
+                    Click="Button_Click_Exit">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#3d3d3d"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1f1f1f"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="75" Height="25" 
+                            CornerRadius="12"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
             <ContentControl Grid.Row="1"
                             Grid.Column="0"
-                            Margin="10"
+                            Margin="9,10,11,10"
                             Content="{Binding CurrentView}"/>
         </Grid>
     </Border>
