@@ -32,32 +32,46 @@ namespace Image_Processing.MVM.View
         {
             InitializeComponent();
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            // Allow users to open an image to convert to grayscale
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "Image Files(*.jpg; *.jpeg; *.png)|*.jpg; *.jpeg; *.png";
-            if (openFile.ShowDialog() == DialogResult.OK)
-            {
-                // <Image/> in XAML takes BitmapImages
-                gray_original.Source = new BitmapImage(new Uri(openFile.FileName));
+            // Speed Benchmark
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                // Process the image in Bitmap
-                grayImagePre = new Bitmap(openFile.FileName);
-                grayImagePreName = Path.GetFileNameWithoutExtension(openFile.FileName);
-                grayImagePost = PDEFormulas.ProcessImage(grayImagePre);
+            string selectedFile = UtilityMethods.UserSelectFile();
 
-                // Convert image to BitmapImages for <Image/> compatability
-                gray_post.Source = PDEFormulas.BitmapToImageSource(grayImagePost);
+            // Update Image
+            UtilityMethods.UpdateSourceImage(selectedFile, gray_original);
 
-            }
+            // Obtain Name of Image
+            // Process to Gray
+            // Update Gray Image
+            await ProcessHeatEquationAsync(selectedFile); // Selected File assumed to be gray
+
+            watch.Stop();
+
+        }
+
+
+
+
+        private async Task ProcessHeatEquationAsync(string selectedFile)
+        {
+            // Process the image in Bitmap
+            grayImagePre = new Bitmap(selectedFile); // Organize name
+            grayImagePreName = Path.GetFileNameWithoutExtension(selectedFile); // Obtain name of image
+            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayImagePre)); // Apply Heat Equation
+
+            // Convert image to BitmapImages for <Image/> compatability
+            gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost); // Update Gray Image
+
+            //PDEFormulas.GetBitmapColorMatrix(grayImagePost);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             if (grayImagePre != null)
             {
-                PDEFormulas.SaveImage(grayImagePreName, grayImagePost);
+                UtilityMethods.SaveImage(grayImagePreName, grayImagePost);
             }
         }
 

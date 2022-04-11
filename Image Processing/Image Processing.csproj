@@ -119,6 +119,7 @@
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="PDE\PDEFormulas.cs" />
+    <Compile Include="PDE\UtilityMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
