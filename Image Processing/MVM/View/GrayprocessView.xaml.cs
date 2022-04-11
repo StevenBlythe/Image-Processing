@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Image_Processing.PDE;
-using System.IO;
 
 
 namespace Image_Processing.MVM.View
@@ -59,8 +51,16 @@ namespace Image_Processing.MVM.View
             // Process the image in Bitmap
             grayImagePre = new Bitmap(selectedFile); // Organize name
             grayImagePreName = Path.GetFileNameWithoutExtension(selectedFile); // Obtain name of image
-            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayImagePre)); // Apply Heat Equation
 
+            // Checks for format
+            if (grayImagePre.PixelFormat == PixelFormat.Format8bppIndexed)
+                grayImagePre = UtilityMethods.ConvertIndexedToNonIndexed(grayImagePre);
+
+
+            Bitmap grayTempImg = (Bitmap)grayImagePre.Clone();
+
+            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg)); // Apply Heat Equation
+            grayTempImg = (Bitmap)grayImagePre.Clone();
             // Convert image to BitmapImages for <Image/> compatability
             gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost); // Update Gray Image
 

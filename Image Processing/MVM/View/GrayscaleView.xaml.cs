@@ -55,20 +55,9 @@ namespace Image_Processing.MVM.View
 
             // Provided images work in an 8bpp format, SetPixel does not work with this format.
             // Convert to appropriate format.
-            // TODO, send to utility.
             if (grayImagePre.PixelFormat == PixelFormat.Format8bppIndexed)
-            {
-                // Create a blank bitmap with the same dimensions
-                Bitmap tempBitmap = new Bitmap(grayImagePre.Width, grayImagePre.Height);
+                grayImagePre = UtilityMethods.ConvertIndexedToNonIndexed(grayImagePre);
 
-                // From this bitmap, the graphics can be obtained, because it has the right PixelFormat
-                using (Graphics g = Graphics.FromImage(tempBitmap))
-                {
-                    // Draw the original bitmap onto the graphics of the new bitmap
-                    g.DrawImage(grayImagePre, 0, 0);
-                }
-                grayImagePre = tempBitmap;
-            }
             grayImagePreName = Path.GetFileNameWithoutExtension(selectedFile); // Obtain name of image
             grayImagePost = await Task.Run(() => UtilityMethods.ProcessImage(grayImagePre)); // Process Color to Gray
 

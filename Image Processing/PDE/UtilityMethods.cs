@@ -73,10 +73,24 @@ namespace Image_Processing.PDE
                         green = gray;
                         blue = gray;
 
-                        bmp.SetPixel(i, j, Color.FromArgb(red, green, red));
+                        bmp.SetPixel(i, j, Color.FromArgb(red, green, blue));
                     }
                 }
                 return bmp;
+        }
+
+        public static Bitmap ConvertIndexedToNonIndexed(Bitmap bmp)
+        {
+            // Create a blank bitmap with the same dimensions
+            Bitmap tempBitmap = new Bitmap(bmp.Width, bmp.Height);
+
+            // From this bitmap, the graphics can be obtained, because it has the right PixelFormat
+            using (Graphics g = Graphics.FromImage(tempBitmap))
+            {
+                // Draw the original bitmap onto the graphics of the new bitmap
+                g.DrawImage(bmp, 0, 0);
+            }
+            return tempBitmap;
         }
 
         // Bitmap to image
