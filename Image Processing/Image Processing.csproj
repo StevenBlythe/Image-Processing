@@ -148,8 +148,5 @@
   <ItemGroup>
     <Folder Include="Images\" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="MVM\View\Zoo.jpg" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

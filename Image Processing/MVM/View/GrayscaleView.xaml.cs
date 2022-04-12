@@ -31,16 +31,10 @@ namespace Image_Processing.MVM.View
 
             string selectedFile = UtilityMethods.UserSelectFile();
 
-            // Check Image
-            Bitmap img = new Bitmap(selectedFile);
-            string _text = img.PixelFormat.ToString();
-
             // Update Image
             UtilityMethods.UpdateSourceImage(selectedFile, gray_original);
 
-            // Obtain Name of Image
-            // Process to Gray
-            // Update Gray Image
+            // Obtain Name of Image | Process to Gray | Update Gray Image
             await ProcessColorToGrayImageAsync(selectedFile);
 
 
@@ -50,29 +44,23 @@ namespace Image_Processing.MVM.View
 
         private async Task ProcessColorToGrayImageAsync(string selectedFile)
         {
-            // Process the image in Bitmap
             grayImagePre = new Bitmap(selectedFile); // Organize name
 
-            // Provided images work in an 8bpp format, SetPixel does not work with this format.
-            // Convert to appropriate format.
-            if (grayImagePre.PixelFormat == PixelFormat.Format8bppIndexed)
-                grayImagePre = UtilityMethods.ConvertIndexedToNonIndexed(grayImagePre);
+            
+            if (grayImagePre.PixelFormat == PixelFormat.Format8bppIndexed)                   // Provided images work in an 8bpp format, SetPixel does not work with this format.
+                grayImagePre = UtilityMethods.ConvertIndexedToNonIndexed(grayImagePre);      // Convert to appropriate format.
 
-            grayImagePreName = Path.GetFileNameWithoutExtension(selectedFile); // Obtain name of image
+            grayImagePreName = Path.GetFileNameWithoutExtension(selectedFile);               // Obtain name of image
             grayImagePost = await Task.Run(() => UtilityMethods.ProcessImage(grayImagePre)); // Process Color to Gray
 
-            // Convert image to BitmapImages for <Image/> compatability
-            gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost); // Update Gray Image
-
-            //PDEFormulas.GetBitmapColorMatrix(grayImagePost);
+            
+            gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost);            // Convert image to BitmapImages for <Image/> compatability, update Post image
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             if (grayImagePre != null)
-            {
                 UtilityMethods.SaveImage(grayImagePreName, grayImagePost);
-            }
         }
     }
 }

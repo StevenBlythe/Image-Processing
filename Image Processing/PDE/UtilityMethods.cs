@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.IO;
+using System.Drawing.Imaging;
 
 namespace Image_Processing.PDE
 {
@@ -81,16 +82,10 @@ namespace Image_Processing.PDE
 
         public static Bitmap ConvertIndexedToNonIndexed(Bitmap bmp)
         {
-            // Create a blank bitmap with the same dimensions
-            Bitmap tempBitmap = new Bitmap(bmp.Width, bmp.Height);
-
-            // From this bitmap, the graphics can be obtained, because it has the right PixelFormat
-            using (Graphics g = Graphics.FromImage(tempBitmap))
-            {
-                // Draw the original bitmap onto the graphics of the new bitmap
-                g.DrawImage(bmp, 0, 0);
-            }
-            return tempBitmap;
+            Bitmap bp = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format24bppRgb);
+            using (Graphics gr = Graphics.FromImage(bp))
+                gr.DrawImage(bmp, new Rectangle(0, 0, bp.Width, bp.Height));
+            return bp;
         }
 
         // Bitmap to image

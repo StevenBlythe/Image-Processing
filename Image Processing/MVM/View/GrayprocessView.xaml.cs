@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -56,10 +57,13 @@ namespace Image_Processing.MVM.View
             if (grayImagePre.PixelFormat == PixelFormat.Format8bppIndexed)
                 grayImagePre = UtilityMethods.ConvertIndexedToNonIndexed(grayImagePre);
 
-
             Bitmap grayTempImg = (Bitmap)grayImagePre.Clone();
 
-            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg)); // Apply Heat Equation
+            // Create Progress Bar
+            BackgroundWorker worker = new BackgroundWorker();
+
+            int time = Int32.Parse(time_gray.Text);
+            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg, time)); // Apply Heat Equation
             grayTempImg = (Bitmap)grayImagePre.Clone();
             // Convert image to BitmapImages for <Image/> compatability
             gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost); // Update Gray Image
