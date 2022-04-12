@@ -60,9 +60,10 @@ namespace Image_Processing.MVM.View
             Bitmap grayTempImg = (Bitmap)grayImagePre.Clone();
 
             // Create Progress Bar
+            BackgroundWorker worker = new BackgroundWorker();
 
             int time = Int32.Parse(time_gray.Text);
-            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg, time, progress_gray)); // Apply Heat Equation
+            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg, time)); // Apply Heat Equation
             grayTempImg = (Bitmap)grayImagePre.Clone();
             // Convert image to BitmapImages for <Image/> compatability
             gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost); // Update Gray Image
