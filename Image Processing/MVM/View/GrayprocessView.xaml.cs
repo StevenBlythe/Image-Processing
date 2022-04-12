@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Image_Processing.PDE;
@@ -27,21 +28,35 @@ namespace Image_Processing.MVM.View
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            // Select File
+            string selectedFile = UtilityMethods.UserSelectFile();
+
+            if (selectedFile == null)
+                return;
+
             // Speed Benchmark
             var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            string selectedFile = UtilityMethods.UserSelectFile();
 
             // Update Image
             UtilityMethods.UpdateSourceImage(selectedFile, gray_original);
 
             // Obtain Name of Image
             // Process to Gray
-            // Update Gray Image
-            await ProcessHeatEquationAsync(selectedFile); // Selected File assumed to be gray
+            ComboBoxItem cbi = (ComboBoxItem)gray_process.SelectedItem;
+            string selectedMethod = cbi.Content.ToString();
+
+            if (selectedMethod == "Heat Equation")
+                await ProcessHeatEquationAsync(selectedFile); // Selected File assumed to be gray
+            else if (selectedMethod == "Level Set")
+                return;
+            else if (selectedMethod == "Modified Level Set")
+                return;
+            else if (selectedMethod == "Shock")
+                return;
+            else
+                return;
 
             watch.Stop();
-
         }
 
 

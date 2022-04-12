@@ -59,17 +59,23 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <ProgressBar x:Name="progress_gray"
-                         Height="5"
-                         Background="#1f1f1f"
-                         BorderThickness="0"
-                         Grid.Column="2"
-                         VerticalAlignment="Bottom">
-            </ProgressBar>
+            <ComboBox x:Name="gray_process"
+                      Grid.Column="2" Background="#FF3D3D3D"
+                      >
+                <ComboBoxItem Content="Heat Equation" IsSelected="True"></ComboBoxItem>
+                <ComboBoxItem Content="Level Set"></ComboBoxItem>
+                <ComboBoxItem Content="Modified Level Set"></ComboBoxItem>
+                <ComboBoxItem Content="Shock"></ComboBoxItem>
+            </ComboBox>
 
             <TextBox x:Name="time_gray" 
                      Height="25"
-                     Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+                     Width="40" 
+                     HorizontalContentAlignment="Center" 
+                     VerticalContentAlignment="Center" 
+                     HorizontalAlignment="Center" 
+                     VerticalAlignment="Center"
+                     Text="10">
                 <TextBox.Style>
                     <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                         <Style.Resources>

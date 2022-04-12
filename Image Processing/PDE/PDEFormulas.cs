@@ -22,7 +22,7 @@ namespace Image_Processing.PDE
             // \Delta x and \Delta y are both 1, since we are measuring in units of one pixel.
             // Refer to 11.7, Heat Equation
 
-            double deltaTime = 0.1;
+            double deltaTime = 0.25;
             double top;
 
 
@@ -76,6 +76,61 @@ namespace Image_Processing.PDE
         }
 
         // Shock Filter
+        public static Bitmap ShockFilter(Bitmap originalImage, int loops)
+        {
+            // Clone Image -- 
+            Bitmap previousImage = (Bitmap)originalImage.Clone();
+
+            // Modified Image (n + 1)
+            Bitmap augmentedImage = (Bitmap)originalImage.Clone();
+
+            // Level Set:
+            // Refer to pg 76
+
+            double deltaTime = 0.25;
+
+            int red;
+            int green;
+            int blue;
+
+            double ux, uy, uxy, uyy, uxx, top, bottom;
+            int pixelValue;
+            for (int t = 0; t < loops; t++)
+            {
+                for (int i = 1; i < previousImage.Width - 1; i++)
+                {
+                    for (int j = 1; j < previousImage.Height - 1; j++)
+                    {
+                        // Center Pixel
+                        Color pixelCenter = previousImage.GetPixel(i, j);
+
+                        // x-Axis
+                        Color pixelLeft = previousImage.GetPixel(i - 1, j);
+                        Color pixelRight = previousImage.GetPixel(i + 1, j);
+
+                        // y-Axis
+                        Color pixelDown = previousImage.GetPixel(i, j - 1);
+                        Color pixelUp = previousImage.GetPixel(i, j + 1);
+
+                        ux = 0;
+                        uy = 0;
+                        uxy = 0;
+                        uyy = 0;
+                        uxx = 0;
+                        top = 0;
+                        bottom = 0;
+
+                        pixelValue = (int)Math.Round(top / bottom, 0);
+                        // Red/Gray
+                        top = (double)(pixelRight.R + pixelLeft.R - 4 * pixelCenter.R + pixelUp.R + pixelDown.R);
+                        red = (int)(top * deltaTime + (double)(pixelCenter.R));
+
+                        augmentedImage.SetPixel(i, j, Color.FromArgb(red, red, red));
+                    }
+                }
+            }
+            return augmentedImage;
+        }
 
         // Level set equation
 
@@ -83,10 +138,10 @@ namespace Image_Processing.PDE
 
 
 
-    // Heat Equation
+        // Heat Equation
 
 
 
-    // Add noise to image?
-}
+        // Add noise to image?
+    }
 }

@@ -31,6 +31,9 @@ namespace Image_Processing.MVM.View
 
             string selectedFile = UtilityMethods.UserSelectFile();
 
+            if (selectedFile == null)
+                return;
+
             // Update Image
             UtilityMethods.UpdateSourceImage(selectedFile, gray_original);
 
