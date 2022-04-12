@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -76,7 +77,7 @@ namespace Image_Processing.PDE
         }
 
         // Shock Filter
-        public static Bitmap ShockFilter(Bitmap originalImage, int loops)
+        public static Bitmap LevelSet(Bitmap originalImage, int loops)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
@@ -87,58 +88,63 @@ namespace Image_Processing.PDE
             // Level Set:
             // Refer to pg 76
 
-            double deltaTime = 0.25;
 
-            int red;
-            int green;
-            int blue;
+            int utRed;
+            int utGreen;
+            int utBlue;
 
-            double ux, uy, uxy, uyy, uxx, top, bottom;
-            int pixelValue;
+
+
+            IDictionary<string, int> pixelRed = new Dictionary<string, int>();
+            IDictionary<string, int> pixelGreen = new Dictionary<string, int>();
+            IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
                 for (int i = 1; i < previousImage.Width - 1; i++)
                 {
                     for (int j = 1; j < previousImage.Height - 1; j++)
                     {
-                        // Center Pixel
-                        Color pixelCenter = previousImage.GetPixel(i, j);
+                        // Format: U R D L UR DR DL UL + red green blue
+                        UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
 
-                        // x-Axis
-                        Color pixelLeft = previousImage.GetPixel(i - 1, j);
-                        Color pixelRight = previousImage.GetPixel(i + 1, j);
+                        // Support methods, multithread calculations
+                        utRed =   LevelSetCalculation(pixelRed);
+                        utGreen = LevelSetCalculation(pixelGreen);
+                        utBlue =  LevelSetCalculation(pixelBlue);
 
-                        // y-Axis
-                        Color pixelDown = previousImage.GetPixel(i, j - 1);
-                        Color pixelUp = previousImage.GetPixel(i, j + 1);
-
-                        ux = 0;
-                        uy = 0;
-                        uxy = 0;
-                        uyy = 0;
-                        uxx = 0;
-                        top = 0;
-                        bottom = 0;
-
-                        pixelValue = (int)Math.Round(top / bottom, 0);
-                        // Red/Gray
-                        top = (double)(pixelRight.R + pixelLeft.R - 4 * pixelCenter.R + pixelUp.R + pixelDown.R);
-                        red = (int)(top * deltaTime + (double)(pixelCenter.R));
-
-                        augmentedImage.SetPixel(i, j, Color.FromArgb(red, red, red));
+                        augmentedImage.SetPixel(i, j, Color.FromArgb(
+                            (utRed < 0) ? 0 : (utRed > 255) ? 255 : 255, 
+                            (utGreen < 0) ? 0 : (utGreen > 255) ? 255 : 255, 
+                            (utBlue < 0) ? 0 : (utBlue > 255) ? 255 : 255
+                            ));
                     }
                 }
             }
             return augmentedImage;
         }
 
+        // Currently no/limited workaround, consult to find way to pass property
+        private static int LevelSetCalculation(IDictionary<string, int> pixel)
+        {
+            double ux, uy, uxy, uyy, uxx, top, bottom, pixelValue;
+
+            ux = (double)(pixel["R"] - pixel["L"]) / 2;
+            uy = (double)(pixel["U"] - pixel["D"]) / 2;
+            uxy = (double)(pixel["UR"] - pixel["UL"] - pixel["DR"] + pixel["DL"])/4;
+            uyy = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
+            uxx = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
+
+            top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
+            bottom = (ux * ux) + (uy * uy) + 0.0001;
+
+            pixelValue = (int)(double)((top / bottom)*0.25 + pixel["OC"]);
+
+            return (int)Math.Round(pixelValue, 0);
+        }
+
         // Level set equation
 
         // Modified Level Set
-
-
-
-        // Heat Equation
 
 
 

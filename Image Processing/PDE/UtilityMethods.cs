@@ -13,6 +13,60 @@ namespace Image_Processing.PDE
 {
     public static class UtilityMethods
     {
+        public static void GetRGBValues(IDictionary<string, int> pixelRed, IDictionary<string, int> pixelGreen, IDictionary<string, int> pixelBlue, Bitmap previousImage, Bitmap originalImage, int i, int j)
+        {
+            // Center Pixel
+            pixelRed["C"] = previousImage.GetPixel(i, j).R;
+            pixelRed["OC"] = originalImage.GetPixel(i, j).R;
+            // x-Axis
+            pixelRed["L"] = previousImage.GetPixel(i - 1, j).R;
+            pixelRed["R"] = previousImage.GetPixel(i + 1, j).R;
+
+            // y-Axis
+            pixelRed["D"] = previousImage.GetPixel(i, j - 1).R;
+            pixelRed["U"] = previousImage.GetPixel(i, j + 1).R;
+
+            // Corner UR UL DR DL
+            pixelRed["UR"] = previousImage.GetPixel(i + 1, j + 1).R;
+            pixelRed["UL"] = previousImage.GetPixel(i - 1, j + 1).R;
+            pixelRed["DR"] = previousImage.GetPixel(i + 1, j - 1).R;
+            pixelRed["DL"] = previousImage.GetPixel(i - 1, j - 1).R;
+
+            // Center Pixel
+            pixelGreen["C"] = previousImage.GetPixel(i, j).G;
+            pixelGreen["OC"] = originalImage.GetPixel(i, j).G;
+            // x-Axis
+            pixelGreen["L"] = previousImage.GetPixel(i - 1, j).G;
+            pixelGreen["R"] = previousImage.GetPixel(i + 1, j).G;
+
+            // y-Axis
+            pixelGreen["D"] = previousImage.GetPixel(i, j - 1).G;
+            pixelGreen["U"] = previousImage.GetPixel(i, j + 1).G;
+
+            // Corner UR UL DR DL
+            pixelGreen["UR"] = previousImage.GetPixel(i + 1, j + 1).G;
+            pixelGreen["UL"] = previousImage.GetPixel(i - 1, j + 1).G;
+            pixelGreen["DR"] = previousImage.GetPixel(i + 1, j - 1).G;
+            pixelGreen["DL"] = previousImage.GetPixel(i - 1, j - 1).G;
+
+            // Center Pixel
+            pixelBlue["C"] = previousImage.GetPixel(i, j).B;
+            pixelBlue["OC"] = originalImage.GetPixel(i, j).B;
+            // x-Axis
+            pixelBlue["L"] = previousImage.GetPixel(i - 1, j).B;
+            pixelBlue["R"] = previousImage.GetPixel(i + 1, j).B;
+
+            // y-Axis
+            pixelBlue["D"] = previousImage.GetPixel(i, j - 1).B;
+            pixelBlue["U"] = previousImage.GetPixel(i, j + 1).B;
+
+            // Corner UR UL DR DL
+            pixelBlue["UR"] = previousImage.GetPixel(i + 1, j + 1).B;
+            pixelBlue["UL"] = previousImage.GetPixel(i - 1, j + 1).B;
+            pixelBlue["DR"] = previousImage.GetPixel(i + 1, j - 1).B;
+            pixelBlue["DL"] = previousImage.GetPixel(i - 1, j - 1).B;
+        }
+
         public static void SaveImage(string grayImagePreName, Bitmap grayImagePost)
         {
             // Displays a SaveFileDialog so the user can save the Image

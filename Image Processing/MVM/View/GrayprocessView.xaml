@@ -73,7 +73,7 @@
                      Width="40" 
                      HorizontalContentAlignment="Center" 
                      VerticalContentAlignment="Center" 
-                     HorizontalAlignment="Center" 
+                     HorizontalAlignment="Right" 
                      VerticalAlignment="Center"
                      Text="10">
                 <TextBox.Style>

@@ -42,19 +42,7 @@ namespace Image_Processing.MVM.View
 
             // Obtain Name of Image
             // Process to Gray
-            ComboBoxItem cbi = (ComboBoxItem)gray_process.SelectedItem;
-            string selectedMethod = cbi.Content.ToString();
-
-            if (selectedMethod == "Heat Equation")
-                await ProcessHeatEquationAsync(selectedFile); // Selected File assumed to be gray
-            else if (selectedMethod == "Level Set")
-                return;
-            else if (selectedMethod == "Modified Level Set")
-                return;
-            else if (selectedMethod == "Shock")
-                return;
-            else
-                return;
+            await ProcessImageAsync(selectedFile); // Selected File assumed to be gray
 
             watch.Stop();
         }
@@ -62,7 +50,7 @@ namespace Image_Processing.MVM.View
 
 
 
-        private async Task ProcessHeatEquationAsync(string selectedFile)
+        private async Task ProcessImageAsync(string selectedFile)
         {
             // Process the image in Bitmap
             grayImagePre = new Bitmap(selectedFile); // Organize name
@@ -78,7 +66,22 @@ namespace Image_Processing.MVM.View
             BackgroundWorker worker = new BackgroundWorker();
 
             int time = Int32.Parse(time_gray.Text);
-            grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg, time)); // Apply Heat Equation
+
+            ComboBoxItem cbi = (ComboBoxItem)gray_process.SelectedItem;
+            string selectedMethod = cbi.Content.ToString();
+
+            if (selectedMethod == "Heat Equation")
+                grayImagePost = await Task.Run(() => PDEFormulas.HeatEquation(grayTempImg, time));
+            else if (selectedMethod == "Level Set")
+                grayImagePost = await Task.Run(() => PDEFormulas.LevelSet(grayTempImg, time));
+            else if (selectedMethod == "Modified Level Set")
+                return;
+            else if (selectedMethod == "Shock")
+                return;
+            else
+                return;
+
+             // Apply Heat Equation
             grayTempImg = (Bitmap)grayImagePre.Clone();
             // Convert image to BitmapImages for <Image/> compatability
             gray_post.Source = UtilityMethods.BitmapToImageSource(grayImagePost); // Update Gray Image
