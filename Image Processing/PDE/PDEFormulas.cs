@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace Image_Processing.PDE
 {
     public static class PDEFormulas
     {
         // Heat Equation
-        public static Bitmap HeatEquation(Bitmap originalImage, int loops)
+        public static Bitmap HeatEquation(Bitmap originalImage, int loops, ProgressBar progressBar)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap) originalImage.Clone();
@@ -33,7 +31,10 @@ namespace Image_Processing.PDE
 
             // We do not consider the boundaries
             // Remove border of image from our loop, [0, Width] -> (0, Width)
-            double calculations = loops * previousImage.Width;
+            double totalCalculations = loops * previousImage.Width;
+            double incrementCalculations = 1 / totalCalculations;
+            int progressValue = 0;
+
             for (int t = 0; t < loops; t++)
             { 
                 for (int i = 1; i < previousImage.Width-1; i++)
@@ -70,6 +71,8 @@ namespace Image_Processing.PDE
                         augmentedImage.SetPixel(i, j, Color.FromArgb(red, green, blue));
                     }
                 }
+                progressValue = (int)(Math.Round(progressValue + incrementCalculations, 0));
+                progressBar.Value = progressValue;
             }
 
             return augmentedImage;
