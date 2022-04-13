@@ -23,14 +23,14 @@ namespace Image_Processing.PDE
             pixelRed["R"] = previousImage.GetPixel(i + 1, j).R;
 
             // y-Axis
-            pixelRed["D"] = previousImage.GetPixel(i, j - 1).R;
-            pixelRed["U"] = previousImage.GetPixel(i, j + 1).R;
+            pixelRed["D"] = previousImage.GetPixel(i, j + 1).R;
+            pixelRed["U"] = previousImage.GetPixel(i, j - 1).R;
 
             // Corner UR UL DR DL
-            pixelRed["UR"] = previousImage.GetPixel(i + 1, j + 1).R;
-            pixelRed["UL"] = previousImage.GetPixel(i - 1, j + 1).R;
-            pixelRed["DR"] = previousImage.GetPixel(i + 1, j - 1).R;
-            pixelRed["DL"] = previousImage.GetPixel(i - 1, j - 1).R;
+            pixelRed["UR"] = previousImage.GetPixel(i + 1, j - 1).R;
+            pixelRed["UL"] = previousImage.GetPixel(i - 1, j - 1).R;
+            pixelRed["DR"] = previousImage.GetPixel(i + 1, j + 1).R;
+            pixelRed["DL"] = previousImage.GetPixel(i - 1, j + 1).R;
 
             // Center Pixel
             pixelGreen["C"] = previousImage.GetPixel(i, j).G;

@@ -104,42 +104,45 @@ namespace Image_Processing.PDE
                 {
                     for (int j = 1; j < previousImage.Height - 1; j++)
                     {
-                        // Format: U R D L UR DR DL UL + red green blue
+                        // Format: U R D L UR DR DL UL for pixelRed, pixelGreen, pixelBlue + Original Center for original image
                         UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
 
-                        // Support methods, multithread calculations
+                        // Support methods, 
+                        // 
                         utRed =   LevelSetCalculation(pixelRed);
                         utGreen = LevelSetCalculation(pixelGreen);
                         utBlue =  LevelSetCalculation(pixelBlue);
 
-                        augmentedImage.SetPixel(i, j, Color.FromArgb(
-                            (utRed < 0) ? 0 : (utRed > 255) ? 255 : 255, 
-                            (utGreen < 0) ? 0 : (utGreen > 255) ? 255 : 255, 
-                            (utBlue < 0) ? 0 : (utBlue > 255) ? 255 : 255
-                            ));
+                        augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
                     }
                 }
             }
             return augmentedImage;
         }
 
+        // TODO add multithread calculations
         // Currently no/limited workaround, consult to find way to pass property
         private static int LevelSetCalculation(IDictionary<string, int> pixel)
         {
-            double ux, uy, uxy, uyy, uxx, top, bottom, pixelValue;
+            double ux, uy, uxy, uyy, uxx, top, bottom, value;
+            int pixelValue;
 
             ux = (double)(pixel["R"] - pixel["L"]) / 2;
             uy = (double)(pixel["U"] - pixel["D"]) / 2;
             uxy = (double)(pixel["UR"] - pixel["UL"] - pixel["DR"] + pixel["DL"])/4;
-            uyy = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
-            uxx = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
+            uyy = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
+            uxx = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
 
             top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
             bottom = (ux * ux) + (uy * uy) + 0.0001;
 
-            pixelValue = (int)(double)((top / bottom)*0.25 + pixel["OC"]);
+            value = (double)((top / bottom)*0.25 + pixel["OC"]);
 
-            return (int)Math.Round(pixelValue, 0);
+            pixelValue = (int)Math.Round(value, 0);
+
+            if (value < 0) return 0;
+            if (value > 255) return 255;
+            else return pixelValue;
         }
 
         // Level set equation
