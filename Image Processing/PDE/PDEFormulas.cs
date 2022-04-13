@@ -71,6 +71,7 @@ namespace Image_Processing.PDE
                         augmentedImage.SetPixel(i, j, Color.FromArgb(red, green, blue));
                     }
                 }
+                previousImage = (Bitmap)augmentedImage.Clone();
             }
 
             return augmentedImage;
@@ -116,6 +117,7 @@ namespace Image_Processing.PDE
                         augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
                     }
                 }
+                previousImage = (Bitmap)augmentedImage.Clone();
             }
             return augmentedImage;
         }
@@ -136,7 +138,7 @@ namespace Image_Processing.PDE
             top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
             bottom = (ux * ux) + (uy * uy) + 0.0001;
 
-            value = (double)((top / bottom)*0.25 + pixel["OC"]);
+            value = (double)((top / bottom)*0.25 + pixel["C"]);
 
             pixelValue = (int)Math.Round(value, 0);
 
