@@ -222,6 +222,90 @@ namespace Image_Processing.PDE
         }
 
 
-        // Add noise to image?
+        // Shock Filter
+        // Level Set
+        public static Bitmap ShockFilter(Bitmap originalImage, int loops)
+        {
+            // Clone Image -- 
+            Bitmap previousImage = (Bitmap)originalImage.Clone();
+
+            // Modified Image (n + 1)
+            Bitmap augmentedImage = (Bitmap)originalImage.Clone();
+
+            // Level Set:
+            // Refer to pg 76
+
+
+            int utRed;
+            int utGreen;
+            int utBlue;
+
+
+
+            IDictionary<string, int> pixelRed = new Dictionary<string, int>();
+            IDictionary<string, int> pixelGreen = new Dictionary<string, int>();
+            IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
+            for (int t = 0; t < loops; t++)
+            {
+                for (int i = 1; i < previousImage.Width - 1; i++)
+                {
+                    for (int j = 1; j < previousImage.Height - 1; j++)
+                    {
+                        // Format: U R D L UR DR DL UL for pixelRed, pixelGreen, pixelBlue + Original Center for original image
+                        UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
+
+                        // Support methods, 
+                        // 
+                        utRed   = ShockFilterCalculation(pixelRed);
+                        utGreen = ShockFilterCalculation(pixelGreen);
+                        utBlue  = ShockFilterCalculation(pixelBlue);
+
+                        augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                    }
+                }
+                previousImage = (Bitmap)augmentedImage.Clone();
+            }
+            return augmentedImage;
+        }
+
+        // Level set equation
+        // TODO add multithread calculations
+        // Currently no/limited workaround, consult to find way to pass property
+        private static int ShockFilterCalculation(IDictionary<string, int> pixel)
+        {
+            double ux, uy, uxy, uyy, uxx, top, bottom, value;
+            int pixelValue;
+
+            // Use Given Equations
+            //uxy = (double)(pixel["UR"] - pixel["UL"] - pixel["DR"] + pixel["DL"]) / 4;
+            uyy = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
+            uxx = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
+
+            // If Cases
+            int uxF, uxB, uyF, uyB;
+            uxF = pixel["R"] - pixel["C"];
+            uxB = pixel["C"] - pixel["L"];
+            
+            if (uxF * uxB < 0) { ux = 0; }
+            else if (uxF > 0) { ux = Math.Min(Math.Abs(uxF), Math.Abs(uxB)); }
+            else { ux = - Math.Min(Math.Abs(uxF), Math.Abs(uxB)); }
+
+            uyF = pixel["U"] - pixel["C"];
+            uyB = pixel["C"] - pixel["D"];
+
+
+            uy = (double)(pixel["U"] - pixel["D"]) / 2;
+
+            top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
+            bottom = (ux * ux) + (uy * uy) + 0.0001;
+
+            value = (double)((top / bottom) * 0.25 + pixel["C"]);
+
+            pixelValue = (int)Math.Round(value, 0);
+
+            if (value < 0) return 0;
+            if (value > 255) return 255;
+            else return pixelValue;
+        }
     }
 }
