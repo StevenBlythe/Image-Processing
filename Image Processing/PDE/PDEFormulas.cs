@@ -77,7 +77,7 @@ namespace Image_Processing.PDE
             return augmentedImage;
         }
 
-        // Shock Filter
+        // Level Set
         public static Bitmap LevelSet(Bitmap originalImage, int loops)
         {
             // Clone Image -- 
@@ -122,6 +122,7 @@ namespace Image_Processing.PDE
             return augmentedImage;
         }
 
+        // Level set equation
         // TODO add multithread calculations
         // Currently no/limited workaround, consult to find way to pass property
         private static int LevelSetCalculation(IDictionary<string, int> pixel)
@@ -129,8 +130,8 @@ namespace Image_Processing.PDE
             double ux, uy, uxy, uyy, uxx, top, bottom, value;
             int pixelValue;
 
-            ux = (double)(pixel["R"] - pixel["L"]) / 2;
-            uy = (double)(pixel["U"] - pixel["D"]) / 2;
+            ux  = (double)(pixel["R"] - pixel["L"]) / 2;
+            uy  = (double)(pixel["U"] - pixel["D"]) / 2;
             uxy = (double)(pixel["UR"] - pixel["UL"] - pixel["DR"] + pixel["DL"])/4;
             uyy = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
             uxx = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
@@ -147,10 +148,78 @@ namespace Image_Processing.PDE
             else return pixelValue;
         }
 
-        // Level set equation
 
         // Modified Level Set
+        public static Bitmap ModifiedLevelSet(Bitmap originalImage, int loops)
+        {
+            // Clone Image -- 
+            Bitmap previousImage = (Bitmap)originalImage.Clone();
 
+            // Modified Image (n + 1)
+            Bitmap augmentedImage = (Bitmap)originalImage.Clone();
+
+            // Level Set:
+            // Refer to pg 76
+
+
+            int utRed;
+            int utGreen;
+            int utBlue;
+
+
+
+            IDictionary<string, int> pixelRed = new Dictionary<string, int>();
+            IDictionary<string, int> pixelGreen = new Dictionary<string, int>();
+            IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
+            for (int t = 0; t < loops; t++)
+            {
+                for (int i = 1; i < previousImage.Width - 1; i++)
+                {
+                    for (int j = 1; j < previousImage.Height - 1; j++)
+                    {
+                        // Format: U R D L UR DR DL UL for pixelRed, pixelGreen, pixelBlue + Original Center for original image
+                        UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
+
+                        // Support methods, 
+                        // 
+                        utRed   = ModifiedLevelSetCalculation(pixelRed);
+                        utGreen = ModifiedLevelSetCalculation(pixelGreen);
+                        utBlue  = ModifiedLevelSetCalculation(pixelBlue);
+
+                        augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                    }
+                }
+                previousImage = (Bitmap)augmentedImage.Clone();
+            }
+            return augmentedImage;
+        }
+
+        private static int ModifiedLevelSetCalculation(IDictionary<string, int> pixel)
+        {
+            // Modified Level Set term
+            double alpha = 0.2;
+            double modified = alpha * (pixel["C"] - pixel["OC"]);
+
+            double ux, uy, uxy, uyy, uxx, top, bottom, value;
+            int pixelValue;
+
+            ux  = (double)(pixel["R"] - pixel["L"]) / 2;
+            uy  = (double)(pixel["U"] - pixel["D"]) / 2;
+            uxy = (double)(pixel["UR"] - pixel["UL"] - pixel["DR"] + pixel["DL"]) / 4;
+            uyy = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
+            uxx = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
+
+            top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
+            bottom = (ux * ux) + (uy * uy) + 0.0001;
+
+            value = (double)((top / bottom - modified) * 0.25 + pixel["C"]);
+
+            pixelValue = (int)Math.Round(value, 0);
+
+            if (value < 0) return 0;
+            if (value > 255) return 255;
+            else return pixelValue;
+        }
 
 
         // Add noise to image?
