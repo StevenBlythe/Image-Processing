@@ -6,8 +6,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media.Imaging;
 using Image_Processing.PDE;
 
 
@@ -16,7 +14,7 @@ namespace Image_Processing.MVM.View
     /// <summary>
     /// Interaction logic for GrayprocessView.xaml
     /// </summary>
-    public partial class GrayprocessView : System.Windows.Controls.UserControl
+    public partial class GrayprocessView : UserControl
     {
         private Bitmap grayImagePre;
         private string grayImagePreName;
