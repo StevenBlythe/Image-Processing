@@ -91,9 +91,12 @@ namespace Image_Processing.MVM.View
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+
             if (grayImagePre != null)
             {
-                UtilityMethods.SaveImage(grayImagePreName, grayImagePost);
+                ComboBoxItem cbi = (ComboBoxItem)gray_process.SelectedItem;
+                string selectedMethod = cbi.Content.ToString();
+                UtilityMethods.SaveImage(grayImagePreName + " - " + selectedMethod, grayImagePost);
             }
         }
 

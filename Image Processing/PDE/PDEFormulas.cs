@@ -277,7 +277,6 @@ namespace Image_Processing.PDE
             int pixelValue;
 
             // Use Given Equations
-            //uxy = (double)(pixel["UR"] - pixel["UL"] - pixel["DR"] + pixel["DL"]) / 4;
             uyy = (double)(pixel["U"] - 2 * pixel["C"] + pixel["D"]);
             uxx = (double)(pixel["R"] - 2 * pixel["C"] + pixel["L"]);
 
@@ -300,7 +299,7 @@ namespace Image_Processing.PDE
 
             top = -Math.Sqrt((ux * ux) + (uy * uy)) * (uxx + uyy);
 
-            value = (double)(top * 0.25 + pixel["C"]);
+            value = (double)(top * 0.001 + pixel["C"]);
 
             pixelValue = (int)Math.Round(value, 0);
 

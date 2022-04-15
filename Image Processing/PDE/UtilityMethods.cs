@@ -74,7 +74,7 @@ namespace Image_Processing.PDE
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "PNG Image|*.png|JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
             saveFileDialog1.Title = "Save an Image File";
-            saveFileDialog1.FileName = grayImagePreName + "_grayscale";
+            saveFileDialog1.FileName = grayImagePreName;
             saveFileDialog1.ShowDialog();
 
             // If the file name is not an empty string open it for saving.

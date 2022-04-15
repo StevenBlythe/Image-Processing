@@ -65,7 +65,7 @@
                 <ComboBoxItem Content="Heat Equation" IsSelected="True"></ComboBoxItem>
                 <ComboBoxItem Content="Level Set"></ComboBoxItem>
                 <ComboBoxItem Content="Modified Level Set"></ComboBoxItem>
-                <ComboBoxItem Content="Shock"></ComboBoxItem>
+                <ComboBoxItem Content="Shock Filter"></ComboBoxItem>
             </ComboBox>
 
             <TextBox x:Name="time_gray" 
