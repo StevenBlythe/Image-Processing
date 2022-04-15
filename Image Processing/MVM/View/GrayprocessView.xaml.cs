@@ -76,8 +76,8 @@ namespace Image_Processing.MVM.View
                 grayImagePost = await Task.Run(() => PDEFormulas.LevelSet(grayTempImg, time));
             else if (selectedMethod == "Modified Level Set")
                 grayImagePost = await Task.Run(() => PDEFormulas.ModifiedLevelSet(grayTempImg, time));
-            else if (selectedMethod == "Shock")
-                return;
+            else if (selectedMethod == "Shock Filter")
+                grayImagePost = await Task.Run(() => PDEFormulas.ShockFilter(grayTempImg, time));
             else
                 return;
 

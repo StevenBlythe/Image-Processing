@@ -273,7 +273,7 @@ namespace Image_Processing.PDE
         // Currently no/limited workaround, consult to find way to pass property
         private static int ShockFilterCalculation(IDictionary<string, int> pixel)
         {
-            double ux, uy, uxy, uyy, uxx, top, bottom, value;
+            double ux, uy, uyy, uxx, top, value;
             int pixelValue;
 
             // Use Given Equations
@@ -286,20 +286,21 @@ namespace Image_Processing.PDE
             uxF = pixel["R"] - pixel["C"];
             uxB = pixel["C"] - pixel["L"];
             
-            if (uxF * uxB < 0) { ux = 0; }
+            if (uxF * uxB <= 0) { ux = 0; }
             else if (uxF > 0) { ux = Math.Min(Math.Abs(uxF), Math.Abs(uxB)); }
             else { ux = - Math.Min(Math.Abs(uxF), Math.Abs(uxB)); }
 
             uyF = pixel["U"] - pixel["C"];
             uyB = pixel["C"] - pixel["D"];
 
+            if (uyF * uyB <= 0) { uy = 0; }
+            else if (uyF > 0) { uy = Math.Min(Math.Abs(uyF), Math.Abs(uyB)); }
+            else { uy = -Math.Min(Math.Abs(uyF), Math.Abs(uyB)); }
 
-            uy = (double)(pixel["U"] - pixel["D"]) / 2;
 
-            top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
-            bottom = (ux * ux) + (uy * uy) + 0.0001;
+            top = -Math.Sqrt((ux * ux) + (uy * uy)) * (uxx + uyy);
 
-            value = (double)((top / bottom) * 0.25 + pixel["C"]);
+            value = (double)(top * 0.25 + pixel["C"]);
 
             pixelValue = (int)Math.Round(value, 0);
 
