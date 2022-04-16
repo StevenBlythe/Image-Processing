@@ -71,22 +71,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MVM\View\ColorprocessView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVM\View\ColorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVM\View\GrayprocessView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVM\View\GrayscaleView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MVM\View\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -97,24 +81,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MVM\ViewModel\ColorprocessViewModel.cs" />
-    <Compile Include="MVM\ViewModel\ColorViewModel.cs" />
-    <Compile Include="MVM\ViewModel\GrayprocessViewModel.cs" />
-    <Compile Include="MVM\ViewModel\GrayscaleViewModel.cs" />
     <Compile Include="MVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="MVM\ViewModel\MainViewModel.cs" />
-    <Compile Include="MVM\View\ColorprocessView.xaml.cs">
-      <DependentUpon>ColorprocessView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVM\View\ColorView.xaml.cs">
-      <DependentUpon>ColorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVM\View\GrayprocessView.xaml.cs">
-      <DependentUpon>GrayprocessView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MVM\View\GrayscaleView.xaml.cs">
-      <DependentUpon>GrayscaleView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MVM\View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>

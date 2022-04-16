@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Controls;
 using System.Drawing.Imaging;
 using System.Windows.Input;
-
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -43,7 +42,7 @@ namespace Image_Processing.MVM.View
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             // Update Image
-            UtilityMethods.UpdateSourceImage(selectedFile, original);
+            UtilityMethods.UpdateSourceImage(selectedFile, original_image);
 
             await ProcessImageAsync(selectedFile); // Selected File assumed to be gray
 
