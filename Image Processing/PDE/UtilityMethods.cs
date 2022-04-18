@@ -69,6 +69,9 @@ namespace Image_Processing.PDE
 
         public static void SaveImage(string grayImagePreName, Bitmap grayImagePost)
         {
+            if (grayImagePost == null)
+                return;
+
             // Displays a SaveFileDialog so the user can save the Image
             // assigned to Button2.
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -78,7 +81,7 @@ namespace Image_Processing.PDE
             saveFileDialog1.ShowDialog();
 
             // If the file name is not an empty string open it for saving.
-            if (saveFileDialog1.FileName != "")
+            if (saveFileDialog1.FileName != "" )
             {
                 // Saves the Image via a FileStream created by the OpenFile method.
                 System.IO.FileStream fs =
