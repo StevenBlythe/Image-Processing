@@ -13,22 +13,6 @@
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <view:HomeView/>
             </DataTemplate>
-
-            <DataTemplate DataType="{x:Type viewModel:GrayscaleViewModel}">
-                <view:GrayscaleView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type viewModel:ColorViewModel}">
-                <view:ColorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type viewModel:ColorprocessViewModel}">
-                <view:ColorprocessView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type viewModel:GrayprocessViewModel}">
-                <view:GrayprocessView/>
-            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
