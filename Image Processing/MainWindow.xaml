@@ -44,38 +44,6 @@
                              Style="{StaticResource MenuButtonTheme}"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}"/>
-                
-                <RadioButton Content="Grayscale Image"
-                             Height="25"
-                             Width="200"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding GrayscaleViewCommand}"/>
-
-                <RadioButton Content="Process Gray Image"
-                             Height="25"
-                             Width="200"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding GrayprocessViewCommand}"/>
-                
-                <RadioButton Content="Alter Color Image"
-                             Height="25"
-                             Width="200"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding ColorprocessViewCommand}"/>
-                
-                <RadioButton Content="Process Color Image"
-                             Height="25"
-                             Width="200"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding ColorprocessViewCommand}"/>
 
 
             </StackPanel>

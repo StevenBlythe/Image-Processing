@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using System.Drawing;
@@ -69,6 +66,9 @@ namespace Image_Processing.PDE
 
         public static void SaveImage(string grayImagePreName, Bitmap grayImagePost)
         {
+            if (grayImagePost == null)
+                return;
+
             // Displays a SaveFileDialog so the user can save the Image
             // assigned to Button2.
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -78,11 +78,11 @@ namespace Image_Processing.PDE
             saveFileDialog1.ShowDialog();
 
             // If the file name is not an empty string open it for saving.
-            if (saveFileDialog1.FileName != "")
+            if (saveFileDialog1.FileName != "" )
             {
                 // Saves the Image via a FileStream created by the OpenFile method.
-                System.IO.FileStream fs =
-                    (System.IO.FileStream)saveFileDialog1.OpenFile();
+                FileStream fs =
+                    (FileStream)saveFileDialog1.OpenFile();
                 // Saves the Image in the appropriate ImageFormat based upon the
                 // File type selected in the dialog box.
                 // NOTE that the FilterIndex property is one-based.
@@ -90,21 +90,21 @@ namespace Image_Processing.PDE
                 {
                     case 1:
                         grayImagePost.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Jpeg);
+                          ImageFormat.Jpeg);
                         break;
 
                     case 2:
                         grayImagePost.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Bmp);
+                          ImageFormat.Bmp);
                         break;
 
                     case 3:
                         grayImagePost.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Gif);
+                          ImageFormat.Gif);
                         break;
                     case 4:
                         grayImagePost.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Png);
+                          ImageFormat.Png);
                         break;
                 }
 
@@ -147,7 +147,7 @@ namespace Image_Processing.PDE
         {
             using (MemoryStream memory = new MemoryStream())
             {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                bitmap.Save(memory, ImageFormat.Bmp);
                 memory.Position = 0;
                 BitmapImage bitmapimage = new BitmapImage();
                 bitmapimage.BeginInit();
