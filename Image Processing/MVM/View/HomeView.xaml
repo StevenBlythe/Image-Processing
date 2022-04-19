@@ -19,6 +19,8 @@
 
         <Image Name="original_image" Grid.Row="0" Grid.Column="0">
         </Image>
+        
+        
         <Image x:Name="post" Grid.Row="0" Grid.Column="1">
         </Image>
 
