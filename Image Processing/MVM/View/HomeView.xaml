@@ -19,6 +19,8 @@
 
         <Image Name="original_image" Grid.Row="0" Grid.Column="0">
         </Image>
+        
+        
         <Image x:Name="post" Grid.Row="0" Grid.Column="1">
         </Image>
 
@@ -274,7 +276,7 @@
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="process"
-                      Grid.Column="2" Background="#FF3D3D3D"
+                      Grid.Column="1" Background="#FF3D3D3D"
                       >
                 <ComboBoxItem Content="Heat Equation" IsSelected="True"></ComboBoxItem>
                 <ComboBoxItem Content="Level Set"></ComboBoxItem>
@@ -284,7 +286,7 @@
 
             <Button x:Name="save_image" Content="Save Image"
                 FontSize="14"
-                Grid.Row="0" Grid.Column="1"
+                Grid.Row="0" Grid.Column="2"
                 Foreground="White" Click="Button_Click_1">
                 <Button.Style>
                     <Style TargetType="Button">
