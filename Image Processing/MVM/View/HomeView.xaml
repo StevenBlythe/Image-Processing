@@ -22,6 +22,220 @@
         <Image x:Name="post" Grid.Row="0" Grid.Column="1">
         </Image>
 
+        <Grid x:Name="tools"
+              Grid.Row="0"
+              Grid.Column="1"
+              Height="31"
+              Background="#121212"
+              VerticalAlignment="Bottom"
+              Margin="0 0 0 5">
+
+            
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="3"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <TextBlock Text="Iterations"
+                           FontSize="14"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="5, 0, 5, 0"/>
+
+                <TextBox x:Name="user_time" 
+                         Height="25"
+                         Width="40" 
+                         HorizontalContentAlignment="Center" 
+                         VerticalContentAlignment="Center" 
+                         HorizontalAlignment="Right" 
+                         VerticalAlignment="Center"
+                         Text="10"
+                         Grid.Column="3"
+                         Margin="5, 0, 5, 0">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="t" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="#3d3d3d" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <TextBlock Text="Delta Time"
+                           FontSize="14"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="5, 0, 5, 0"/>
+
+                <TextBox x:Name="delta" 
+                         Height="25"
+                         Width="40" 
+                         HorizontalContentAlignment="Center" 
+                         VerticalContentAlignment="Center" 
+                         HorizontalAlignment="Right" 
+                         VerticalAlignment="Center"
+                         Text="10"
+                         Grid.Column="3"
+                         Margin="5, 0, 5, 0">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="t" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="#3d3d3d" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <TextBlock Text="Alpha"
+                           FontSize="14"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="5, 0, 5, 0"/>
+
+                <TextBox x:Name="alpha" 
+                         Height="25"
+                         Width="40" 
+                         HorizontalContentAlignment="Center" 
+                         VerticalContentAlignment="Center" 
+                         HorizontalAlignment="Right" 
+                         VerticalAlignment="Center"
+                         Text="10"
+                         Grid.Column="3"
+                         Margin="5, 0, 5, 0">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="t" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="#3d3d3d" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <TextBlock Text="Autosaves"
+                           FontSize="14"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="5, 0, 5, 0"/>
+
+                <TextBox x:Name="autosave" 
+                         Height="25"
+                         Width="40" 
+                         HorizontalContentAlignment="Center" 
+                         VerticalContentAlignment="Center" 
+                         HorizontalAlignment="Right" 
+                         VerticalAlignment="Center"
+                         Text="10"
+                         Grid.Column="3"
+                         Margin="5, 0, 5, 0">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                            <Style.Resources>
+                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                    <VisualBrush.Visual>
+                                        <Label Content="t" Foreground="LightGray" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="#3d3d3d" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="4"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <ComboBox x:Name="grayscale"
+                      Grid.Column="2" Background="#FF3D3D3D"
+                      >
+                    <ComboBoxItem Content="Grayscale" IsSelected="True"></ComboBoxItem>
+                    <ComboBoxItem Content="Color"></ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+
+        </Grid>
+
         <Button x:Name="select_image" Content="Select Image"
                 FontSize="14"
                 Grid.Row="1" Grid.Column="0"
@@ -67,38 +281,6 @@
                 <ComboBoxItem Content="Modified Level Set"></ComboBoxItem>
                 <ComboBoxItem Content="Shock Filter"></ComboBoxItem>
             </ComboBox>
-
-            <TextBox x:Name="user_time" 
-                     Height="25"
-                     Width="40" 
-                     HorizontalContentAlignment="Center" 
-                     VerticalContentAlignment="Center" 
-                     HorizontalAlignment="Right" 
-                     VerticalAlignment="Center"
-                     Text="10">
-                <TextBox.Style>
-                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                        <Style.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Center" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Content="t" Foreground="LightGray" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Style.Resources>
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="Text" Value="{x:Null}">
-                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Background" Value="#3d3d3d" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
 
             <Button x:Name="save_image" Content="Save Image"
                 FontSize="14"
