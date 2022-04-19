@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Collections;
 
 namespace Image_Processing.PDE
 {
     public static class PDEFormulas
     {
         // Heat Equation
-        public static Bitmap HeatEquation(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
+        public static Bitmap HeatEquation(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imageName, string imagePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap) originalImage.Clone();
@@ -18,6 +20,10 @@ namespace Image_Processing.PDE
 
             // Name for autosave
             string fileName;
+            imagePath += "Heat Equation delta " + delta +"\\";
+
+            if (!Directory.Exists(imagePath) && saveIncrements > 0)
+                _ = Directory.CreateDirectory(imagePath);
 
             // Heat Equation:
             // ut = uxx + uyy
@@ -39,7 +45,7 @@ namespace Image_Processing.PDE
             {
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
-                    fileName = imagePrePath + " - Heat Equation " + t + ".png";
+                    fileName = imagePath + imageName + " - " + t + ".png";
                     previousImage.Save(fileName, ImageFormat.Png);
                 }
                 for (int i = 1; i < previousImage.Width-1; i++)
@@ -85,13 +91,13 @@ namespace Image_Processing.PDE
             }
 
             if (saveIncrements > 0)
-                previousImage.Save(imagePrePath + " - Heat Equation " + loops + ".png", ImageFormat.Png);
+                previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
 
             return augmentedImage;
         }
 
         // Level Set
-        public static Bitmap LevelSet(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
+        public static Bitmap LevelSet(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imageName, string imagePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
@@ -100,6 +106,10 @@ namespace Image_Processing.PDE
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
 
             string fileName;
+            imagePath += "Level Set delta " + delta + "\\";
+
+            if (!Directory.Exists(imagePath) && saveIncrements > 0)
+                _ = Directory.CreateDirectory(imagePath);
 
             // Level Set:
             // Refer to pg 76
@@ -118,7 +128,7 @@ namespace Image_Processing.PDE
             {
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
-                    fileName = imagePrePath + " - Level Set " + t + ".png";
+                    fileName = imagePath + imageName + " - " + t + ".png";
                     previousImage.Save(fileName, ImageFormat.Png);
                 }
                 for (int i = 1; i < previousImage.Width - 1; i++)
@@ -146,7 +156,7 @@ namespace Image_Processing.PDE
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
             if (saveIncrements > 0)
-                previousImage.Save(imagePrePath + " - Level Set " + loops + ".png", ImageFormat.Png);
+                previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
 
             return augmentedImage;
         }
@@ -179,7 +189,7 @@ namespace Image_Processing.PDE
 
 
         // Modified Level Set
-        public static Bitmap ModifiedLevelSet(Bitmap originalImage, int loops, double alpha, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
+        public static Bitmap ModifiedLevelSet(Bitmap originalImage, int loops, double alpha, double delta, string paletteChoice, int saveIncrements, string imageName, string imagePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
@@ -188,10 +198,13 @@ namespace Image_Processing.PDE
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
 
             string fileName;
+            imagePath += "Modified Level Set delta " + delta + " alpha " + alpha + "\\";
+
+            if (!Directory.Exists(imagePath) && saveIncrements > 0)
+                _ = Directory.CreateDirectory(imagePath);
 
             // Level Set:
             // Refer to pg 76
-
 
             int utRed;
             int utGreen;
@@ -206,7 +219,7 @@ namespace Image_Processing.PDE
             {
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
-                    fileName = imagePrePath + " - Modified Level Set " + t + ".png";
+                    fileName = imagePath + imageName + " - " + t + ".png";
                     previousImage.Save(fileName, ImageFormat.Png);
                 }
                 for (int i = 1; i < previousImage.Width - 1; i++)
@@ -232,7 +245,7 @@ namespace Image_Processing.PDE
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
             if (saveIncrements > 0)
-                previousImage.Save(imagePrePath + " - Modified Level Set " + loops + ".png", ImageFormat.Png);
+                previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
 
             return augmentedImage;
         }
@@ -266,7 +279,7 @@ namespace Image_Processing.PDE
 
         // Shock Filter
         // Level Set
-        public static Bitmap ShockFilter(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
+        public static Bitmap ShockFilter(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imageName, string imagePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
@@ -275,6 +288,11 @@ namespace Image_Processing.PDE
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
 
             string fileName;
+
+            imagePath += "Shock Filter delta " + delta + "\\";
+
+            if (!Directory.Exists(imagePath) && saveIncrements > 0)
+                _ = Directory.CreateDirectory(imagePath);
 
             // Level Set:
             // Refer to pg 76
@@ -293,7 +311,7 @@ namespace Image_Processing.PDE
             {
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
-                    fileName = imagePrePath + " - Shock Filter " + t + ".png";
+                    fileName = imagePath + imageName + " - " + t + ".png";
                     previousImage.Save(fileName, ImageFormat.Png);
                 }
                 for (int i = 1; i < previousImage.Width - 1; i++)
@@ -320,7 +338,7 @@ namespace Image_Processing.PDE
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
             if (saveIncrements > 0)
-                previousImage.Save(imagePrePath + " - Shock Filter " + loops + ".png", ImageFormat.Png);
+                previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
 
             return augmentedImage;
         }

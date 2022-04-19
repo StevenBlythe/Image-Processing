@@ -44,7 +44,8 @@ namespace Image_Processing.MVM.View
             // Update Image
             UtilityMethods.UpdateSourceImage(selectedFile, original_image);
 
-            await ProcessImageAsync(selectedFile); // Selected File assumed to be gray
+            
+            await ProcessImageAsync(selectedFile);
 
             watch.Stop();
         }
@@ -54,7 +55,8 @@ namespace Image_Processing.MVM.View
             // Process the image in Bitmap
             ImagePre = new Bitmap(selectedFile); // Organize name
             ImagePreName = Path.GetFileNameWithoutExtension(selectedFile); // Obtain name of image
-            string ImagePrePath = Path.ChangeExtension(Path.GetFullPath(selectedFile), null);
+            //string ImagePrePath = Path.ChangeExtension(Path.GetFullPath(selectedFile), null);
+            string imagePath = Path.GetDirectoryName(selectedFile) + "\\";
 
             // Checks for format
             if (ImagePre.PixelFormat == PixelFormat.Format8bppIndexed)
@@ -65,25 +67,39 @@ namespace Image_Processing.MVM.View
             // Create Progress Bar
             BackgroundWorker worker = new BackgroundWorker();
 
-            int time = Int32.Parse(user_time.Text);
-            int saveIncrements = Int32.Parse(autosave.Text);
+            int time; 
+            int saveIncrements;
+            double alphaValue;
+            double deltaValue;
+            string selectedMethod;
+            string paletteChoice;
 
-            double alphaValue = Double.Parse(alpha.Text);
-            double deltaValue = Double.Parse(delta.Text);
+            try
+            {
+            time = Int32.Parse(user_time.Text);
+            saveIncrements = Int32.Parse(autosave.Text);
 
-            string selectedMethod = GetContentCombo(process);
-            string paletteChoice = GetContentCombo(palette_choice);
+            alphaValue = Double.Parse(alpha.Text);
+            deltaValue = Double.Parse(delta.Text);
+
+            selectedMethod = GetContentCombo(process);
+            paletteChoice = GetContentCombo(palette_choice);
+            }
+            catch (FormatException e)
+            {
+                return;
+            }
 
 
 
             if (selectedMethod == "Heat Equation")
-                ImagePost = await Task.Run(() => PDEFormulas.HeatEquation(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
+                ImagePost = await Task.Run(() => PDEFormulas.HeatEquation(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePreName, imagePath));
             else if (selectedMethod == "Level Set")
-                ImagePost = await Task.Run(() => PDEFormulas.LevelSet(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
+                ImagePost = await Task.Run(() => PDEFormulas.LevelSet(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePreName, imagePath));
             else if (selectedMethod == "Modified Level Set")
-                ImagePost = await Task.Run(() => PDEFormulas.ModifiedLevelSet(TempImg, time, alphaValue, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
+                ImagePost = await Task.Run(() => PDEFormulas.ModifiedLevelSet(TempImg, time, alphaValue, deltaValue, paletteChoice, saveIncrements, ImagePreName, imagePath));
             else if (selectedMethod == "Shock Filter")
-                ImagePost = await Task.Run(() => PDEFormulas.ShockFilter(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
+                ImagePost = await Task.Run(() => PDEFormulas.ShockFilter(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePreName, imagePath));
             else
                 return;
 

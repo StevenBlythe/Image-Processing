@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Image Processing/Images/Tiles/delta 0.01
+/Image Processing/Images/Tiles/delta 0.05
+/Image Processing/Images/Tiles/delta 0.25
+/Image Processing/Images/Tiles/Heat Equation delta 0.01
+/Image Processing/Images/Tiles/Heat Equation delta 0.05
+/Image Processing/Images/Tiles/Heat Equation delta 0.25
