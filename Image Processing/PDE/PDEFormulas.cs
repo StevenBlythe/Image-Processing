@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-using System.Windows.Media.Imaging;
+using System.Drawing.Imaging;
 
 namespace Image_Processing.PDE
 {
     public static class PDEFormulas
     {
         // Heat Equation
-        public static Bitmap HeatEquation(Bitmap originalImage, int loops)
+        public static Bitmap HeatEquation(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap) originalImage.Clone();
@@ -18,12 +16,14 @@ namespace Image_Processing.PDE
             // Modified Image (n + 1)
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
 
+            // Name for autosave
+            string fileName;
+
             // Heat Equation:
             // ut = uxx + uyy
             // \Delta x and \Delta y are both 1, since we are measuring in units of one pixel.
             // Refer to 11.7, Heat Equation
 
-            double deltaTime = 0.25;
             double top;
 
 
@@ -36,7 +36,12 @@ namespace Image_Processing.PDE
             // Remove border of image from our loop, [0, Width] -> (0, Width)
             double calculations = loops * previousImage.Width;
             for (int t = 0; t < loops; t++)
-            { 
+            {
+                if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
+                {
+                    fileName = imagePrePath + " - Heat Equation " + t + ".png";
+                    previousImage.Save(fileName, ImageFormat.Png);
+                }
                 for (int i = 1; i < previousImage.Width-1; i++)
                 {
                     for (int j = 1; j < previousImage.Height-1; j++)
@@ -60,31 +65,41 @@ namespace Image_Processing.PDE
 
                         // Red/Gray
                         top = (double)(pixelRight.R + pixelLeft.R - 4 * pixelCenter.R + pixelUp.R + pixelDown.R);
-                        red = (int)(top * deltaTime + (double)(pixelCenter.R));
+                        red = (int)(top * delta + (double)(pixelCenter.R));
 
-                        top = (double)(pixelRight.G + pixelLeft.G - 4 * pixelCenter.G + pixelUp.G + pixelDown.G);
-                        green = (int)(top * deltaTime + (double)(pixelCenter.G));
+                        if (paletteChoice == "Color") 
+                        { 
+                            top = (double)(pixelRight.G + pixelLeft.G - 4 * pixelCenter.G + pixelUp.G + pixelDown.G);
+                            green = (int)(top * delta + (double)(pixelCenter.G));
 
-                        top = (double)(pixelRight.B + pixelLeft.B - 4 * pixelCenter.B + pixelUp.B + pixelDown.B);
-                        blue = (int)(top * deltaTime + (double)(pixelCenter.B));
+                            top = (double)(pixelRight.B + pixelLeft.B - 4 * pixelCenter.B + pixelUp.B + pixelDown.B);
+                            blue = (int)(top * delta + (double)(pixelCenter.B));
+                            augmentedImage.SetPixel(i, j, Color.FromArgb(red, green, blue));
+                        } 
+                        else
+                            augmentedImage.SetPixel(i, j, Color.FromArgb(red, red, red));
 
-                        augmentedImage.SetPixel(i, j, Color.FromArgb(red, green, blue));
                     }
                 }
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
 
+            if (saveIncrements > 0)
+                previousImage.Save(imagePrePath + " - Heat Equation " + loops + ".png", ImageFormat.Png);
+
             return augmentedImage;
         }
 
         // Level Set
-        public static Bitmap LevelSet(Bitmap originalImage, int loops)
+        public static Bitmap LevelSet(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
 
             // Modified Image (n + 1)
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
+
+            string fileName;
 
             // Level Set:
             // Refer to pg 76
@@ -101,6 +116,11 @@ namespace Image_Processing.PDE
             IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
+                if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
+                {
+                    fileName = imagePrePath + " - Level Set " + t + ".png";
+                    previousImage.Save(fileName, ImageFormat.Png);
+                }
                 for (int i = 1; i < previousImage.Width - 1; i++)
                 {
                     for (int j = 1; j < previousImage.Height - 1; j++)
@@ -109,23 +129,32 @@ namespace Image_Processing.PDE
                         UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
 
                         // Support methods, 
-                        // 
-                        utRed =   LevelSetCalculation(pixelRed);
-                        utGreen = LevelSetCalculation(pixelGreen);
-                        utBlue =  LevelSetCalculation(pixelBlue);
-
+                        if (paletteChoice == "Color") {
+                        utRed =   LevelSetCalculation(pixelRed, delta);
+                        utGreen = LevelSetCalculation(pixelGreen, delta);
+                        utBlue =  LevelSetCalculation(pixelBlue, delta);
                         augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                        } else
+                        {
+                            utRed = LevelSetCalculation(pixelRed, delta);
+                            augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utRed, utRed));
+
+                        }
+
                     }
                 }
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
+            if (saveIncrements > 0)
+                previousImage.Save(imagePrePath + " - Level Set " + loops + ".png", ImageFormat.Png);
+
             return augmentedImage;
         }
 
         // Level set equation
         // TODO add multithread calculations
         // Currently no/limited workaround, consult to find way to pass property
-        private static int LevelSetCalculation(IDictionary<string, int> pixel)
+        private static int LevelSetCalculation(IDictionary<string, int> pixel, double delta)
         {
             double ux, uy, uxy, uyy, uxx, top, bottom, value;
             int pixelValue;
@@ -139,7 +168,7 @@ namespace Image_Processing.PDE
             top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
             bottom = (ux * ux) + (uy * uy) + 0.0001;
 
-            value = (double)((top / bottom)*0.25 + pixel["C"]);
+            value = (double)((top / bottom)*delta + pixel["C"]);
 
             pixelValue = (int)Math.Round(value, 0);
 
@@ -150,13 +179,15 @@ namespace Image_Processing.PDE
 
 
         // Modified Level Set
-        public static Bitmap ModifiedLevelSet(Bitmap originalImage, int loops)
+        public static Bitmap ModifiedLevelSet(Bitmap originalImage, int loops, double alpha, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
 
             // Modified Image (n + 1)
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
+
+            string fileName;
 
             // Level Set:
             // Refer to pg 76
@@ -173,6 +204,11 @@ namespace Image_Processing.PDE
             IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
+                if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
+                {
+                    fileName = imagePrePath + " - Modified Level Set " + t + ".png";
+                    previousImage.Save(fileName, ImageFormat.Png);
+                }
                 for (int i = 1; i < previousImage.Width - 1; i++)
                 {
                     for (int j = 1; j < previousImage.Height - 1; j++)
@@ -181,23 +217,29 @@ namespace Image_Processing.PDE
                         UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
 
                         // Support methods, 
-                        // 
-                        utRed   = ModifiedLevelSetCalculation(pixelRed);
-                        utGreen = ModifiedLevelSetCalculation(pixelGreen);
-                        utBlue  = ModifiedLevelSetCalculation(pixelBlue);
-
-                        augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                        if (paletteChoice == "Color") {
+                            utRed = ModifiedLevelSetCalculation(pixelRed, delta, alpha);
+                            utGreen = ModifiedLevelSetCalculation(pixelGreen, delta, alpha);
+                            utBlue = ModifiedLevelSetCalculation(pixelBlue, delta, alpha);
+                            augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                        }
+                        else {
+                            utRed = ModifiedLevelSetCalculation(pixelRed, delta, alpha);
+                            augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utRed, utRed));
+                        }
                     }
                 }
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
+            if (saveIncrements > 0)
+                previousImage.Save(imagePrePath + " - Modified Level Set " + loops + ".png", ImageFormat.Png);
+
             return augmentedImage;
         }
 
-        private static int ModifiedLevelSetCalculation(IDictionary<string, int> pixel)
+        private static int ModifiedLevelSetCalculation(IDictionary<string, int> pixel, double delta, double alpha)
         {
             // Modified Level Set term
-            double alpha = 0.2;
             double modified = alpha * (pixel["C"] - pixel["OC"]);
 
             double ux, uy, uxy, uyy, uxx, top, bottom, value;
@@ -212,7 +254,7 @@ namespace Image_Processing.PDE
             top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
             bottom = (ux * ux) + (uy * uy) + 0.0001;
 
-            value = (double)((top / bottom - modified) * 0.25 + pixel["C"]);
+            value = (double)((top / bottom - modified) * delta + pixel["C"]);
 
             pixelValue = (int)Math.Round(value, 0);
 
@@ -224,13 +266,15 @@ namespace Image_Processing.PDE
 
         // Shock Filter
         // Level Set
-        public static Bitmap ShockFilter(Bitmap originalImage, int loops)
+        public static Bitmap ShockFilter(Bitmap originalImage, int loops, double delta, string paletteChoice, int saveIncrements, string imagePrePath)
         {
             // Clone Image -- 
             Bitmap previousImage = (Bitmap)originalImage.Clone();
 
             // Modified Image (n + 1)
             Bitmap augmentedImage = (Bitmap)originalImage.Clone();
+
+            string fileName;
 
             // Level Set:
             // Refer to pg 76
@@ -247,6 +291,11 @@ namespace Image_Processing.PDE
             IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
+                if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
+                {
+                    fileName = imagePrePath + " - Shock Filter " + t + ".png";
+                    previousImage.Save(fileName, ImageFormat.Png);
+                }
                 for (int i = 1; i < previousImage.Width - 1; i++)
                 {
                     for (int j = 1; j < previousImage.Height - 1; j++)
@@ -254,24 +303,32 @@ namespace Image_Processing.PDE
                         // Format: U R D L UR DR DL UL for pixelRed, pixelGreen, pixelBlue + Original Center for original image
                         UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
 
-                        // Support methods, 
-                        // 
-                        utRed   = ShockFilterCalculation(pixelRed);
-                        utGreen = ShockFilterCalculation(pixelGreen);
-                        utBlue  = ShockFilterCalculation(pixelBlue);
+                        if (paletteChoice == "Color") { 
+                            utRed   = ShockFilterCalculation(pixelRed, delta);
+                            utGreen = ShockFilterCalculation(pixelGreen, delta);
+                            utBlue  = ShockFilterCalculation(pixelBlue, delta);
+                        } 
+                        else {
+                            utRed = ShockFilterCalculation(pixelRed, delta);
+                            utGreen = utRed;
+                            utBlue = utRed;
+                        }
 
                         augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
                     }
                 }
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
+            if (saveIncrements > 0)
+                previousImage.Save(imagePrePath + " - Shock Filter " + loops + ".png", ImageFormat.Png);
+
             return augmentedImage;
         }
 
         // Level set equation
         // TODO add multithread calculations
         // Currently no/limited workaround, consult to find way to pass property
-        private static int ShockFilterCalculation(IDictionary<string, int> pixel)
+        private static int ShockFilterCalculation(IDictionary<string, int> pixel, double delta)
         {
             double ux, uy, uyy, uxx, top, value;
             int pixelValue;
@@ -299,7 +356,7 @@ namespace Image_Processing.PDE
 
             top = -Math.Sqrt((ux * ux) + (uy * uy)) * (uxx + uyy);
 
-            value = (double)(top * 0.001 + pixel["C"]);
+            value = (double)(top * delta + pixel["C"]);
 
             pixelValue = (int)Math.Round(value, 0);
 

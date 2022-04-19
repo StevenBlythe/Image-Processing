@@ -90,7 +90,7 @@ namespace Image_Processing.PDE
                 {
                     case 1:
                         grayImagePost.Save(fs,
-                          System.Drawing.Imaging.ImageFormat.Jpeg);
+                          ImageFormat.Jpeg);
                         break;
 
                     case 2:

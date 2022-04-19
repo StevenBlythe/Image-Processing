@@ -54,6 +54,7 @@ namespace Image_Processing.MVM.View
             // Process the image in Bitmap
             ImagePre = new Bitmap(selectedFile); // Organize name
             ImagePreName = Path.GetFileNameWithoutExtension(selectedFile); // Obtain name of image
+            string ImagePrePath = Path.ChangeExtension(Path.GetFullPath(selectedFile), null);
 
             // Checks for format
             if (ImagePre.PixelFormat == PixelFormat.Format8bppIndexed)
@@ -65,24 +66,36 @@ namespace Image_Processing.MVM.View
             BackgroundWorker worker = new BackgroundWorker();
 
             int time = Int32.Parse(user_time.Text);
+            int saveIncrements = Int32.Parse(autosave.Text);
 
-            ComboBoxItem cbi = (ComboBoxItem)process.SelectedItem;
-            string selectedMethod = cbi.Content.ToString();
+            double alphaValue = Double.Parse(alpha.Text);
+            double deltaValue = Double.Parse(delta.Text);
+
+            string selectedMethod = GetContentCombo(process);
+            string paletteChoice = GetContentCombo(palette_choice);
+
+
 
             if (selectedMethod == "Heat Equation")
-                ImagePost = await Task.Run(() => PDEFormulas.HeatEquation(TempImg, time));
+                ImagePost = await Task.Run(() => PDEFormulas.HeatEquation(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
             else if (selectedMethod == "Level Set")
-                ImagePost = await Task.Run(() => PDEFormulas.LevelSet(TempImg, time));
+                ImagePost = await Task.Run(() => PDEFormulas.LevelSet(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
             else if (selectedMethod == "Modified Level Set")
-                ImagePost = await Task.Run(() => PDEFormulas.ModifiedLevelSet(TempImg, time));
+                ImagePost = await Task.Run(() => PDEFormulas.ModifiedLevelSet(TempImg, time, alphaValue, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
             else if (selectedMethod == "Shock Filter")
-                ImagePost = await Task.Run(() => PDEFormulas.ShockFilter(TempImg, time));
+                ImagePost = await Task.Run(() => PDEFormulas.ShockFilter(TempImg, time, deltaValue, paletteChoice, saveIncrements, ImagePrePath));
             else
                 return;
 
             // Convert image to BitmapImages for <Image/> compatability
             post.Source = UtilityMethods.BitmapToImageSource(ImagePost); // Update Gray Image
 
+        }
+
+        private string GetContentCombo(ComboBox selection)
+        {
+            ComboBoxItem cbi = (ComboBoxItem)selection.SelectedItem;
+            return cbi.Content.ToString();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

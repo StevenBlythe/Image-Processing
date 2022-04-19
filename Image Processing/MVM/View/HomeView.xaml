@@ -106,7 +106,7 @@
                          VerticalContentAlignment="Center" 
                          HorizontalAlignment="Right" 
                          VerticalAlignment="Center"
-                         Text="10"
+                         Text="0.25"
                          Grid.Column="3"
                          Margin="5, 0, 5, 0">
                     <TextBox.Style>
@@ -151,7 +151,7 @@
                          VerticalContentAlignment="Center" 
                          HorizontalAlignment="Right" 
                          VerticalAlignment="Center"
-                         Text="10"
+                         Text="0.25"
                          Grid.Column="3"
                          Margin="5, 0, 5, 0">
                     <TextBox.Style>
@@ -196,7 +196,7 @@
                          VerticalContentAlignment="Center" 
                          HorizontalAlignment="Right" 
                          VerticalAlignment="Center"
-                         Text="10"
+                         Text="0"
                          Grid.Column="3"
                          Margin="5, 0, 5, 0">
                     <TextBox.Style>
@@ -228,7 +228,7 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
-                <ComboBox x:Name="grayscale"
+                <ComboBox x:Name="palette_choice"
                       Grid.Column="2" Background="#FF3D3D3D"
                       >
                     <ComboBoxItem Content="Grayscale" IsSelected="True"></ComboBoxItem>
