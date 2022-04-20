@@ -200,7 +200,7 @@ namespace Image_Processing.PDE
             top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
             bottom = (ux * ux) + (uy * uy) + 0.0001;
 
-            value = (double)((top / bottom)*delta + pixel["C"]);
+            value = (double)((top / bottom)*delta + pixel["C"]); // top/bottom * delta time + u^n_j,k
 
             pixelValue = (int)Math.Round(value, 0);
 
