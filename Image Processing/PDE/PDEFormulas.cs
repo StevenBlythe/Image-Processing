@@ -22,6 +22,8 @@ namespace Image_Processing.PDE
             string fileName;
             imagePath += "Heat Equation delta " + delta +"\\";
 
+            bool sameImage = false;
+
             if (!Directory.Exists(imagePath) && saveIncrements > 0)
                 _ = Directory.CreateDirectory(imagePath);
 
@@ -43,6 +45,12 @@ namespace Image_Processing.PDE
             double calculations = loops * previousImage.Width;
             for (int t = 0; t < loops; t++)
             {
+                if (sameImage)
+                {
+                    previousImage.Save(imagePath + imageName + " - " + t + " final.png", ImageFormat.Png);
+                    return previousImage;
+                }
+                sameImage = true;
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
                     fileName = imagePath + imageName + " - " + t + ".png";
@@ -72,6 +80,9 @@ namespace Image_Processing.PDE
                         // Red/Gray
                         top = (double)(pixelRight.R + pixelLeft.R - 4 * pixelCenter.R + pixelUp.R + pixelDown.R);
                         red = (int)(top * delta + (double)(pixelCenter.R));
+
+                        if (sameImage == true && red != pixelCenter.R)
+                            sameImage = false;
 
                         if (paletteChoice == "Color") 
                         { 
@@ -108,6 +119,8 @@ namespace Image_Processing.PDE
             string fileName;
             imagePath += "Level Set delta " + delta + "\\";
 
+            bool sameImage = false;
+
             if (!Directory.Exists(imagePath) && saveIncrements > 0)
                 _ = Directory.CreateDirectory(imagePath);
 
@@ -126,6 +139,12 @@ namespace Image_Processing.PDE
             IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
+                if (sameImage)
+                {
+                    previousImage.Save(imagePath + imageName + " - " + t + " final.png", ImageFormat.Png);
+                    return previousImage;
+                }
+                sameImage = true;
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
                     fileName = imagePath + imageName + " - " + t + ".png";
@@ -140,15 +159,18 @@ namespace Image_Processing.PDE
 
                         // Support methods, 
                         if (paletteChoice == "Color") {
-                        utRed =   LevelSetCalculation(pixelRed, delta);
-                        utGreen = LevelSetCalculation(pixelGreen, delta);
-                        utBlue =  LevelSetCalculation(pixelBlue, delta);
-                        augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                            utRed =   LevelSetCalculation(pixelRed, delta);
+                            utGreen = LevelSetCalculation(pixelGreen, delta);
+                            utBlue =  LevelSetCalculation(pixelBlue, delta);
+                            augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                            if (sameImage == true && utRed != pixelRed["C"])
+                                sameImage = false;
                         } else
                         {
                             utRed = LevelSetCalculation(pixelRed, delta);
                             augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utRed, utRed));
-
+                            if (sameImage == true && utRed != pixelRed["C"])
+                                sameImage = false;
                         }
 
                     }
@@ -200,6 +222,8 @@ namespace Image_Processing.PDE
             string fileName;
             imagePath += "Modified Level Set delta " + delta + " alpha " + alpha + "\\";
 
+            bool sameImage = false;
+
             if (!Directory.Exists(imagePath) && saveIncrements > 0)
                 _ = Directory.CreateDirectory(imagePath);
 
@@ -217,6 +241,12 @@ namespace Image_Processing.PDE
             IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
+                if (sameImage)
+                {
+                    previousImage.Save(imagePath + imageName + " - " + t + " final.png", ImageFormat.Png);
+                    return previousImage;
+                }
+                sameImage = true;
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
                     fileName = imagePath + imageName + " - " + t + ".png";
@@ -235,10 +265,14 @@ namespace Image_Processing.PDE
                             utGreen = ModifiedLevelSetCalculation(pixelGreen, delta, alpha);
                             utBlue = ModifiedLevelSetCalculation(pixelBlue, delta, alpha);
                             augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                            if (sameImage == true && utRed != pixelRed["C"])
+                                sameImage = false;
                         }
                         else {
                             utRed = ModifiedLevelSetCalculation(pixelRed, delta, alpha);
                             augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utRed, utRed));
+                            if (sameImage == true && utRed != pixelRed["C"])
+                                sameImage = false;
                         }
                     }
                 }
@@ -291,6 +325,8 @@ namespace Image_Processing.PDE
 
             imagePath += "Shock Filter delta " + delta + "\\";
 
+            bool sameImage = false;
+
             if (!Directory.Exists(imagePath) && saveIncrements > 0)
                 _ = Directory.CreateDirectory(imagePath);
 
@@ -309,6 +345,12 @@ namespace Image_Processing.PDE
             IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
             for (int t = 0; t < loops; t++)
             {
+                if (sameImage && saveIncrements > 0)
+                {
+                    previousImage.Save(imagePath + imageName + " - " + t + " final.png", ImageFormat.Png);
+                    return previousImage;
+                }
+                sameImage = true;
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
                     fileName = imagePath + imageName + " - " + t + ".png";
@@ -325,11 +367,15 @@ namespace Image_Processing.PDE
                             utRed   = ShockFilterCalculation(pixelRed, delta);
                             utGreen = ShockFilterCalculation(pixelGreen, delta);
                             utBlue  = ShockFilterCalculation(pixelBlue, delta);
+                            if (sameImage == true && utRed != pixelRed["C"])
+                                sameImage = false;
                         } 
                         else {
                             utRed = ShockFilterCalculation(pixelRed, delta);
                             utGreen = utRed;
                             utBlue = utRed;
+                            if (sameImage == true && utRed != pixelRed["C"])
+                                sameImage = false;
                         }
 
                         augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
