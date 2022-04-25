@@ -132,13 +132,14 @@ namespace Image_Processing.PDE
             // Refer to pg 76
 
 
-            int utRed;
-            int utGreen;
-            int utBlue;
+            double utRed;
+            double utGreen;
+            double utBlue;
 
             // Create Matrix (Double) with pixel values
             double[,,] pixelValues = new double[originalImage.Height, originalImage.Width, 3];
             pixelValues = UtilityMethods.GetFullRGBValues(pixelValues, originalImage);
+            double[,,] pixelAugmentedValues = new double[originalImage.Height, originalImage.Width, 3];
 
             IDictionary<string, double> pixelRed   = new Dictionary<string, double>();
             IDictionary<string, double> pixelGreen = new Dictionary<string, double>();
@@ -168,23 +169,32 @@ namespace Image_Processing.PDE
                             utRed =   LevelSetCalculation(pixelRed, delta);
                             utGreen = LevelSetCalculation(pixelGreen, delta);
                             utBlue =  LevelSetCalculation(pixelBlue, delta);
-                            augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
-                            if (sameImage == true && utRed != pixelRed["C"])
-                                sameImage = false;
+                            pixelAugmentedValues[i, j, 0] = utRed;
+                            pixelAugmentedValues[i, j, 1] = utGreen;
+                            pixelAugmentedValues[i, j, 2] = utBlue;
+                            
+                            //augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utGreen, utBlue));
+                            //if (sameImage == true && utRed != pixelRed["C"])
+                            //    sameImage = false;
                         } else
                         {
                             utRed = LevelSetCalculation(pixelRed, delta);
-                            augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utRed, utRed));
-                            if (sameImage == true && utRed != pixelRed["C"])
-                                sameImage = false;
+                            pixelAugmentedValues[i, j, 0] = utRed;
+                            pixelAugmentedValues[i, j, 1] = utRed;
+                            pixelAugmentedValues[i, j, 2] = utRed;
+                            //augmentedImage.SetPixel(i, j, Color.FromArgb(utRed, utRed, utRed));
+                            //if (sameImage == true && utRed != pixelRed["C"])
+                            //    sameImage = false;
                         }
 
                     }
                 }
-                previousImage = (Bitmap)augmentedImage.Clone();
+                // Swap arrays, pixelAugmentedValues becomes u^(n + 1), swap in O(1) time
+                (pixelValues, pixelAugmentedValues) = (pixelAugmentedValues, pixelValues);
             }
             if (saveIncrements > 0)
-                previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
+                UtilityMethods.SaveImage(pixelValues, imagePath, imageName, loops);
+                //previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
 
             return augmentedImage;
         }
@@ -192,10 +202,9 @@ namespace Image_Processing.PDE
         // Level set equation
         // TODO add multithread calculations
         // Currently no/limited workaround, consult to find way to pass property
-        private static int LevelSetCalculation(IDictionary<string, int> pixel, double delta)
+        private static double LevelSetCalculation(IDictionary<string, double> pixel, double delta)
         {
-            double ux, uy, uxy, uyy, uxx, top, bottom, value;
-            int pixelValue;
+            double ux, uy, uxy, uyy, uxx, top, bottom, pixelValue;
 
             ux  = (double)(pixel["R"] - pixel["L"]) / 2;
             uy  = (double)(pixel["U"] - pixel["D"]) / 2;
@@ -206,12 +215,12 @@ namespace Image_Processing.PDE
             top = (ux * ux * uyy) - (2 * ux * uy * uxy) + (uy * uy * uxx);
             bottom = (ux * ux) + (uy * uy) + 0.0000001;
 
-            value = (double)((top / bottom)*delta + pixel["C"]); // top/bottom * delta time + u^n_j,k
+            pixelValue = (top / bottom)*delta + pixel["C"]; // top/bottom * delta time + u^n_j,k
 
-            pixelValue = (int)Math.Round(value, 0);
+            //pixelValue = (int)Math.Round(value, 0);
 
-            if (value < 0) return 0;
-            if (value > 255) return 255;
+            if (pixelValue < 0) return 0;
+            if (pixelValue > 255) return 255;
             else return pixelValue;
         }
 

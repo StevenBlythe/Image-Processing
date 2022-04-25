@@ -10,6 +10,8 @@ namespace Image_Processing.PDE
 {
     public static class UtilityMethods
     {
+        private static double[,,] _vals;
+
         public static void GetRGBValues(IDictionary<string, double> pixelRed, IDictionary<string, double> pixelGreen, IDictionary<string, double> pixelBlue, double[,,] previousImage, Bitmap originalImage, int i, int j)
         {
             // Red //
@@ -192,6 +194,13 @@ namespace Image_Processing.PDE
                 return openFile.FileName;
             }
             return null;
+        }
+
+        internal static void SwapArrays(double[,,] pixelValues, double[,,] pixelAugmentedValues)
+        {
+            _vals = pixelValues;
+            pixelValues = pixelAugmentedValues;
+            pixelAugmentedValues = _vals;
         }
     }
 }
