@@ -40,6 +40,9 @@ namespace Image_Processing.PDE
             int green;
             int blue;
 
+            // Determine Pixels
+
+
             // We do not consider the boundaries
             // Remove border of image from our loop, [0, Width] -> (0, Width)
             double calculations = loops * previousImage.Width;
@@ -98,6 +101,7 @@ namespace Image_Processing.PDE
 
                     }
                 }
+                // Optimize here 
                 previousImage = (Bitmap)augmentedImage.Clone();
             }
 
@@ -132,19 +136,21 @@ namespace Image_Processing.PDE
             int utGreen;
             int utBlue;
 
+            // Create Matrix (Double) with pixel values
+            double[,,] pixelValues = new double[originalImage.Height, originalImage.Width, 3];
+            pixelValues = UtilityMethods.GetFullRGBValues(pixelValues, originalImage);
 
-
-            IDictionary<string, int> pixelRed = new Dictionary<string, int>();
-            IDictionary<string, int> pixelGreen = new Dictionary<string, int>();
-            IDictionary<string, int> pixelBlue = new Dictionary<string, int>();
+            IDictionary<string, double> pixelRed   = new Dictionary<string, double>();
+            IDictionary<string, double> pixelGreen = new Dictionary<string, double>();
+            IDictionary<string, double> pixelBlue  = new Dictionary<string, double>();
             for (int t = 0; t < loops; t++)
             {
-                if (sameImage)
-                {
-                    previousImage.Save(imagePath + imageName + " - " + t + " final.png", ImageFormat.Png);
-                    return previousImage;
-                }
-                sameImage = true;
+                //if (sameImage)
+                //{
+                //    previousImage.Save(imagePath + imageName + " - " + t + " final.png", ImageFormat.Png);
+                //    return previousImage;
+                //}
+                //sameImage = true;
                 if (saveIncrements > 0 && t != -1 && t % saveIncrements == 0)
                 {
                     fileName = imagePath + imageName + " - " + t + ".png";
@@ -155,7 +161,7 @@ namespace Image_Processing.PDE
                     for (int j = 1; j < previousImage.Height - 1; j++)
                     {
                         // Format: U R D L UR DR DL UL for pixelRed, pixelGreen, pixelBlue + Original Center for original image
-                        UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, previousImage, originalImage, i, j);
+                        UtilityMethods.GetRGBValues(pixelRed, pixelGreen, pixelBlue, pixelValues, originalImage, i, j);
 
                         // Support methods, 
                         if (paletteChoice == "Color") {

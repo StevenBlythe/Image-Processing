@@ -10,58 +10,61 @@ namespace Image_Processing.PDE
 {
     public static class UtilityMethods
     {
-        public static void GetRGBValues(IDictionary<string, int> pixelRed, IDictionary<string, int> pixelGreen, IDictionary<string, int> pixelBlue, Bitmap previousImage, Bitmap originalImage, int i, int j)
+        public static void GetRGBValues(IDictionary<string, double> pixelRed, IDictionary<string, double> pixelGreen, IDictionary<string, double> pixelBlue, double[,,] previousImage, Bitmap originalImage, int i, int j)
         {
+            // Red //
             // Center Pixel
-            pixelRed["C"] = previousImage.GetPixel(i, j).R;
+            pixelRed["C"] = previousImage[i, j, 0];
             pixelRed["OC"] = originalImage.GetPixel(i, j).R;
             // x-Axis
-            pixelRed["L"] = previousImage.GetPixel(i - 1, j).R;
-            pixelRed["R"] = previousImage.GetPixel(i + 1, j).R;
+            pixelRed["L"] = previousImage[i - 1, j, 0];
+            pixelRed["R"] = previousImage[i + 1, j, 0];
 
             // y-Axis
-            pixelRed["D"] = previousImage.GetPixel(i, j + 1).R;
-            pixelRed["U"] = previousImage.GetPixel(i, j - 1).R;
+            pixelRed["D"] = previousImage[i, j + 1, 0];
+            pixelRed["U"] = previousImage[i, j - 1, 0];
 
             // Corner UR UL DR DL
-            pixelRed["UR"] = previousImage.GetPixel(i + 1, j - 1).R;
-            pixelRed["UL"] = previousImage.GetPixel(i - 1, j - 1).R;
-            pixelRed["DR"] = previousImage.GetPixel(i + 1, j + 1).R;
-            pixelRed["DL"] = previousImage.GetPixel(i - 1, j + 1).R;
+            pixelRed["UR"] = previousImage[i + 1, j - 1, 0];
+            pixelRed["UL"] = previousImage[i - 1, j - 1, 0];
+            pixelRed["DR"] = previousImage[i + 1, j + 1, 0];
+            pixelRed["DL"] = previousImage[i - 1, j + 1, 0];
 
+            // Green //
             // Center Pixel
-            pixelGreen["C"] = previousImage.GetPixel(i, j).G;
-            pixelGreen["OC"] = originalImage.GetPixel(i, j).G;
+            pixelRed["C"] = previousImage[i, j, 1];
+            pixelRed["OC"] = originalImage.GetPixel(i, j).G;
             // x-Axis
-            pixelGreen["L"] = previousImage.GetPixel(i - 1, j).G;
-            pixelGreen["R"] = previousImage.GetPixel(i + 1, j).G;
+            pixelRed["L"] = previousImage[i - 1, j, 1];
+            pixelRed["R"] = previousImage[i + 1, j, 1];
 
             // y-Axis
-            pixelGreen["D"] = previousImage.GetPixel(i, j - 1).G;
-            pixelGreen["U"] = previousImage.GetPixel(i, j + 1).G;
+            pixelRed["D"] = previousImage[i, j + 1, 1];
+            pixelRed["U"] = previousImage[i, j - 1, 1];
 
             // Corner UR UL DR DL
-            pixelGreen["UR"] = previousImage.GetPixel(i + 1, j + 1).G;
-            pixelGreen["UL"] = previousImage.GetPixel(i - 1, j + 1).G;
-            pixelGreen["DR"] = previousImage.GetPixel(i + 1, j - 1).G;
-            pixelGreen["DL"] = previousImage.GetPixel(i - 1, j - 1).G;
+            pixelRed["UR"] = previousImage[i + 1, j - 1, 1];
+            pixelRed["UL"] = previousImage[i - 1, j - 1, 1];
+            pixelRed["DR"] = previousImage[i + 1, j + 1, 1];
+            pixelRed["DL"] = previousImage[i - 1, j + 1, 1];
 
+            // Blue //
             // Center Pixel
-            pixelBlue["C"] = previousImage.GetPixel(i, j).B;
-            pixelBlue["OC"] = originalImage.GetPixel(i, j).B;
+            pixelRed["C"] = previousImage[i, j, 2];
+            pixelRed["OC"] = originalImage.GetPixel(i, j).B;
             // x-Axis
-            pixelBlue["L"] = previousImage.GetPixel(i - 1, j).B;
-            pixelBlue["R"] = previousImage.GetPixel(i + 1, j).B;
+            pixelRed["L"] = previousImage[i - 1, j, 2];
+            pixelRed["R"] = previousImage[i + 1, j, 2];
 
             // y-Axis
-            pixelBlue["D"] = previousImage.GetPixel(i, j - 1).B;
-            pixelBlue["U"] = previousImage.GetPixel(i, j + 1).B;
+            pixelRed["D"] = previousImage[i, j + 1, 2];
+            pixelRed["U"] = previousImage[i, j - 1, 2];
 
             // Corner UR UL DR DL
-            pixelBlue["UR"] = previousImage.GetPixel(i + 1, j + 1).B;
-            pixelBlue["UL"] = previousImage.GetPixel(i - 1, j + 1).B;
-            pixelBlue["DR"] = previousImage.GetPixel(i + 1, j - 1).B;
-            pixelBlue["DL"] = previousImage.GetPixel(i - 1, j - 1).B;
+            pixelRed["UR"] = previousImage[i + 1, j - 1, 2];
+            pixelRed["UL"] = previousImage[i - 1, j - 1, 2];
+            pixelRed["DR"] = previousImage[i + 1, j + 1, 2];
+            pixelRed["DL"] = previousImage[i - 1, j + 1, 2];
         }
 
         public static void SaveImage(string grayImagePreName, Bitmap grayImagePost)
@@ -132,6 +135,22 @@ namespace Image_Processing.PDE
                     }
                 }
                 return bmp;
+        }
+
+        internal static double[,,] GetFullRGBValues(double[,,] pixelValues, Bitmap originalImage)
+        {
+            Color pixel;
+            for (int i = 0; i < originalImage.Width; i++)
+            {
+                for (int j = 0; j < originalImage.Height; j++)
+                {
+                    pixel = originalImage.GetPixel(i, j);
+                    pixelValues[i, j, 0] = pixel.R;
+                    pixelValues[i, j, 1] = pixel.G;
+                    pixelValues[i, j, 2] = pixel.B;
+                }
+            }
+            return pixelValues;
         }
 
         public static Bitmap ConvertIndexedToNonIndexed(Bitmap bmp)
