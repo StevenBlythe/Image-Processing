@@ -123,7 +123,7 @@ namespace Image_Processing.PDE
             string fileName;
             imagePath += "Level Set delta " + delta + "\\";
 
-            bool sameImage = false;
+            //bool sameImage = false;
 
             if (!Directory.Exists(imagePath) && saveIncrements > 0)
                 _ = Directory.CreateDirectory(imagePath);
@@ -193,7 +193,7 @@ namespace Image_Processing.PDE
                 (pixelValues, pixelAugmentedValues) = (pixelAugmentedValues, pixelValues);
             }
             if (saveIncrements > 0)
-                UtilityMethods.SaveImage(pixelValues, imagePath, imageName, loops);
+                UtilityMethods.SaveImageInterval(pixelValues, imagePath, imageName, loops);
                 //previousImage.Save(imagePath + imageName + " - " + loops + ".png", ImageFormat.Png);
 
             return augmentedImage;

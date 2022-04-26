@@ -202,5 +202,10 @@ namespace Image_Processing.PDE
             pixelValues = pixelAugmentedValues;
             pixelAugmentedValues = _vals;
         }
+
+        internal static void SaveImageInterval(double[,,] pixelValues, string imagePath, string imageName, int loops)
+        {
+            
+        }
     }
 }
